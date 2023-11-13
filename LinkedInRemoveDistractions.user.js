@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LinkedIn Remove Distractions
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Remove all the LinkedIn distractions to get concentrated on what's really important
 // @author       GabryB03
 // @match        https://www.linkedin.com/*
@@ -14,6 +14,11 @@
 (function()
 {
     'use strict';
+
+    function getElementByXpath(path)
+    {
+        return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    }
 
     function asyncLoop()
     {
@@ -63,6 +68,23 @@
                 if (messageBubble != null && messageBubble != undefined)
                 {
                     messageBubble.remove();
+                }
+            }
+
+            {
+                distractingElements = ["/html/body/div[6]/div[3]/div/div/div[2]/div/div/aside", "/html/body/div[5]/div[3]/div/div/div[2]/div/div/aside"];
+
+                for (var i = 0; i < distractingElements.length; i++)
+                {
+                    var sidebarElement = getElementByXpath(distractingElements[i]);
+
+                    if (sidebarElement != null && sidebarElement != undefined)
+                    {
+                        if (sidebarElement.innerHTML.includes("<div id=\"browsemap_recommendation\""))
+                        {
+                            sidebarElement.remove();
+                        }
+                    }
                 }
             }
         }
