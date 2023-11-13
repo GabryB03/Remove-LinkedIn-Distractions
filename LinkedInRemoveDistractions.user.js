@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LinkedIn Remove Distractions
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Remove all the LinkedIn distractions to get concentrated on what's really important
 // @author       GabryB03
 // @match        https://www.linkedin.com/*
@@ -21,7 +21,7 @@
         {
             var distractingElements = [];
 
-            if (window.location.href == 'https://www.linkedin.com/feed/')
+            if (window.location.href.startsWith('https://www.linkedin.com/feed/'))
             {
                 distractingElements =
                 [
