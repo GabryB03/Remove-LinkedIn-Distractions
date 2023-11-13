@@ -33,7 +33,7 @@
     {
         try
         {
-            if (window.location.href.startsWith('https://www.linkedin.com/feed/') || window.location.href == "https://www.linked.com/")
+            if (window.location.href.startsWith('https://www.linkedin.com/feed/') || window.location.href == 'https://www.linkedin.com/')
             {
                 var distractingElements =
                 [
