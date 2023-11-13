@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LinkedIn Remove Distractions
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Remove all the LinkedIn distractions to get concentrated on what's really important
 // @author       GabryB03
 // @match        https://www.linkedin.com/*
@@ -14,6 +14,15 @@
 (function()
 {
     'use strict';
+    const css =
+    `
+        .msg-overlay-list-bubble, a[href='https://www.linkedin.com/notifications/?'], a[href='https://www.linkedin.com/mynetwork/?doMynetworkRefresh=true'], a[href='https://www.linkedin.com/mynetwork/?'], div[class='premium-upsell-link'] { display: none !important; visibility: hidden !important; }
+    `;
+    const head = document.head || document.getElementsByTagName('head')[0];
+    const styleElement = document.createElement('style');
+    styleElement.type = 'text/css';
+    styleElement.innerHTML = css;
+    head.appendChild(styleElement);
 
     function getElementByXpath(path)
     {
@@ -24,11 +33,9 @@
     {
         try
         {
-            var distractingElements = [];
-
-            if (window.location.href.startsWith('https://www.linkedin.com/feed/'))
+            if (window.location.href.startsWith('https://www.linkedin.com/feed/') || window.location.href == "https://www.linked.com/")
             {
-                distractingElements =
+                var distractingElements =
                 [
                     "main[class='scaffold-layout__main']",
                     "div[class='scaffold-layout__sidebar']",
@@ -40,50 +47,29 @@
                     "div[class='scaffold-layout__sticky-content']",
                     "button[class='global-nav__app-launcher-trigger']"
                 ];
-            }
-            else
-            {
-                distractingElements =
-                [
-                    "a[href='https://www.linkedin.com/notifications/?']",
-                    "a[href='https://www.linkedin.com/mynetwork/?doMynetworkRefresh=true']",
-                    "a[href='https://www.linkedin.com/mynetwork/?']",
-                    "div[class='premium-upsell-link']"
-                ];
-            }
-
-            for (var i = 0; i < distractingElements.length; i++)
-            {
-                var distractingElement = document.querySelector(distractingElements[i]);
-
-                if (distractingElement != null && distractingElement != undefined)
-                {
-                    distractingElement.remove();
-                }
-            }
-
-            {
-                var messageBubble = document.getElementsByClassName("msg-overlay-list-bubble")[0];
-
-                if (messageBubble != null && messageBubble != undefined)
-                {
-                    messageBubble.remove();
-                }
-            }
-
-            {
-                distractingElements = ["/html/body/div[6]/div[3]/div/div/div[2]/div/div/aside", "/html/body/div[5]/div[3]/div/div/div[2]/div/div/aside"];
 
                 for (var i = 0; i < distractingElements.length; i++)
                 {
-                    var sidebarElement = getElementByXpath(distractingElements[i]);
-
-                    if (sidebarElement != null && sidebarElement != undefined)
+                    var distractingElement = document.querySelector(distractingElements[i]);
+    
+                    if (distractingElement != null && distractingElement != undefined)
                     {
-                        if (sidebarElement.innerHTML.includes("<div id=\"browsemap_recommendation\""))
-                        {
-                            sidebarElement.remove();
-                        }
+                        distractingElement.remove();
+                    }
+                }
+            }
+
+            var distractingPaths = ["/html/body/div[6]/div[3]/div/div/div[2]/div/div/aside", "/html/body/div[5]/div[3]/div/div/div[2]/div/div/aside"];
+
+            for (var i = 0; i < distractingPaths.length; i++)
+            {
+                var sidebarElement = getElementByXpath(distractingPaths[i]);
+
+                if (sidebarElement != null && sidebarElement != undefined)
+                {
+                    if (sidebarElement.innerHTML.includes("<div id=\"browsemap_recommendation\""))
+                    {
+                        sidebarElement.remove();
                     }
                 }
             }
