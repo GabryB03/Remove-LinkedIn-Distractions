@@ -1,27 +1,36 @@
 // ==UserScript==
 // @name         LinkedIn Remove Distractions
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  Remove all the LinkedIn distractions to get concentrated on what's really important
 // @author       GabryB03
 // @match        https://www.linkedin.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=linkedin.com
-// @updateURL    https://github.com/GabryB03/Remove-LinkedIn-Distractions/raw/main/RemoveLinkedInDistractions.user.js
-// @downloadURL  https://github.com/GabryB03/Remove-LinkedIn-Distractions/raw/main/RemoveLinkedInDistractions.user.js
+// @updateURL    https://github.com/GabryB03/Remove-LinkedIn-Distractions/raw/main/LinkedInRemoveDistractions.user.js
+// @downloadURL  https://github.com/GabryB03/Remove-LinkedIn-Distractions/raw/main/LinkedInRemoveDistractions.user.js
 // @grant        none
 // ==/UserScript==
 
 (function()
 {
-    'use strict';
-    const css =
-    `
-        .msg-overlay-list-bubble, a[href='https://www.linkedin.com/notifications/?'], a[href='https://www.linkedin.com/mynetwork/?doMynetworkRefresh=true'], a[href='https://www.linkedin.com/mynetwork/?'], div[class='premium-upsell-link'] { display: none !important; visibility: hidden !important; }
-    `;
+    const distractingElements =
+    [
+        "main[class='scaffold-layout__main']",
+        "div[class='scaffold-layout__sidebar']",
+        "a[href='https://www.linkedin.com/notifications/?']",
+        "a[href='https://www.linkedin.com/mynetwork/?doMynetworkRefresh=true']",
+        "a[href='https://www.linkedin.com/mynetwork/?']",
+        "div[class='premium-upsell-link']",
+        "div[class='mb2']",
+        "div[class='scaffold-layout__sticky-content']",
+        "button[class='global-nav__app-launcher-trigger']"
+    ];
+
+    const distractingPaths = ["/html/body/div[6]/div[3]/div/div/div[2]/div/div/aside", "/html/body/div[5]/div[3]/div/div/div[2]/div/div/aside"];
     const head = document.head || document.getElementsByTagName('head')[0];
     const styleElement = document.createElement('style');
     styleElement.type = 'text/css';
-    styleElement.innerHTML = css;
+    styleElement.innerHTML = ".msg-overlay-list-bubble,a[href='https://www.linkedin.com/notifications/?'],a[href='https://www.linkedin.com/mynetwork/?doMynetworkRefresh=true'],a[href='https://www.linkedin.com/mynetwork/?'],div[class='premium-upsell-link']{display:none!important;visibility:hidden!important;}";
     head.appendChild(styleElement);
 
     function getElementByXpath(path)
@@ -35,19 +44,6 @@
         {
             if (window.location.href.startsWith('https://www.linkedin.com/feed/') || window.location.href == 'https://www.linkedin.com/')
             {
-                var distractingElements =
-                [
-                    "main[class='scaffold-layout__main']",
-                    "div[class='scaffold-layout__sidebar']",
-                    "a[href='https://www.linkedin.com/notifications/?']",
-                    "a[href='https://www.linkedin.com/mynetwork/?doMynetworkRefresh=true']",
-                    "a[href='https://www.linkedin.com/mynetwork/?']",
-                    "div[class='premium-upsell-link']",
-                    "div[class='mb2']",
-                    "div[class='scaffold-layout__sticky-content']",
-                    "button[class='global-nav__app-launcher-trigger']"
-                ];
-
                 for (var i = 0; i < distractingElements.length; i++)
                 {
                     var distractingElement = document.querySelector(distractingElements[i]);
@@ -58,8 +54,6 @@
                     }
                 }
             }
-
-            var distractingPaths = ["/html/body/div[6]/div[3]/div/div/div[2]/div/div/aside", "/html/body/div[5]/div[3]/div/div/div[2]/div/div/aside"];
 
             for (var i = 0; i < distractingPaths.length; i++)
             {
