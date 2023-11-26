@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LinkedIn Remove Distractions
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  Remove all the LinkedIn distractions to get concentrated on what's really important
 // @author       GabryB03
 // @match        https://www.linkedin.com/*
@@ -67,6 +67,23 @@
                     }
                 }
             }
+			
+			var dashboardElement = document.querySelector("a[href='/dashboard/']");
+			
+			if (dashboardElement != null && dashboardElement != undefined)
+			{
+				if (dashboardElement.parentElement != null && dashboardElement.parentElement != undefined)
+				{
+					dashboardElement.parentElement.remove();
+				}
+			}
+			
+			var buttonElement = document.querySelector("path[d='M3 3h4v4H3zm7 4h4V3h-4zm7-4v4h4V3zM3 14h4v-4H3zm7 0h4v-4h-4zm7 0h4v-4h-4zM3 21h4v-4H3zm7 0h4v-4h-4zm7 0h4v-4h-4z']").parentElement.parentElement.parentElement.parentElement.parentElement;
+			
+			if (buttonElement != null && buttonElement != undefined)
+			{
+				buttonElement.remove();
+			}
         }
         catch (e)
         {
